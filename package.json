@@ -1,0 +1,31 @@
+{
+  "name": "l2h",
+  "version": "0.0.1",
+  "description": "Live2Helm - A CLI to test helm templates from a local .tpl file on a live cluster.",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node ./index.ts",
+    "example": "ts-node ./index.ts -f ./wow/such/path/to/file.tpl -n much.templateName",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.json",
+    "postinstall": "npm run build"
+  },
+  "bin": {
+    "l2h": "./build/index.js",
+    "live2helm": "./build/index.js"
+  },
+  "keywords": [],
+  "author": "Rudolf Chrispens",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.7.10",
+    "@types/yargs": "^17.0.2",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "boxen": "^4.0.0",
+    "chalk": "^2.4.2",
+    "yargs": "^17.1.1"
+  }
+}
