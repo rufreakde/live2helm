@@ -1,42 +1,19 @@
 #!/usr/bin/env node
-
-import chalk from "chalk";
-import boxen from "boxen";
-import { exec } from "child_process";
-import { args } from "./src/parser";
+import { ArgsParser } from "./src/parser";
+import { Commandline } from "./src/commandline"
+import { boxenOptions, argsPrint } from "./src/console";
 
 
-const parsedArguments = args
-const consolePrints: string[] = [];
-
-// example print formatted
-consolePrints.push(chalk.white(`Command args: `));
-consolePrints.push(chalk.green(`${parsedArguments["filepath"]}!\n`));
-consolePrints.push(chalk.white("Template Name: "));
-consolePrints.push(chalk.green(`${parsedArguments["templatename"]}!\n`));
+const parser = new ArgsParser();
+const parsedArguments = parser.getParsedArguments();
+argsPrint(parsedArguments);
 
 // check environment function
-
+// TODO SYNC commandline await?
+const commandline = new Commandline(boxenOptions);
 // execute the helm
+commandline.ls();
 
 // print the value the template retrieved
 
 // remove all resources from the cluster where helm was depoyed to
-
-// TEST move to commandline
-exec("ls -la", (error, stdout, stderr) => {
-    if (error) {
-        consolePrints.push(chalk.red(`${error.message}!\n`));
-        return;
-    }
-    if (stderr) {
-        consolePrints.push(chalk.red(`${stderr}!\n`));
-        return;
-    }
-
-    consolePrints.push(chalk.white(`${stdout}!\n`));
-
-    // console print
-    const msgBox = boxen(consolePrints.join("\n"), boxenOptions);
-    console.log(msgBox);
-});
