@@ -3,7 +3,9 @@
 import chalk from "chalk";
 import boxen from "boxen";
 import * as yargs from "yargs";
+import { exec } from "child_process";
 
+// argument parser
 const borderStyle: boxen.CustomBorderStyle = {
     topLeft: " ",
     topRight: " ",
@@ -41,6 +43,7 @@ const args: any = yargs
         demandOption: true,
     }).argv;
 
+// example print formatted
 const options: string[] = []
 options.push(chalk.white(`Command args: `));
 options.push(chalk.green(`${args["filepath"]}!\n`));
@@ -48,5 +51,28 @@ options.push(chalk.white("Template Name: "))
 options.push(chalk.green(`${args["templatename"]}!\n`));
 
 
-const msgBox = boxen(options.join(""), boxenOptions);
-console.log(msgBox);
+// check environment function
+
+// execute the helm
+
+// print the value the template retrieved
+
+// remove all resources from the cluster where helm was depoyed to
+
+// TEST
+exec("ls -la", (error, stdout, stderr) => {
+    if (error) {
+        options.push(chalk.red(`${error.message}!\n`));
+        return;
+    }
+    if (stderr) {
+        options.push(chalk.red(`${stderr}!\n`));
+        return;
+    }
+
+    options.push(chalk.white(`${stdout}!\n`));
+
+    // console print
+    const msgBox = boxen(options.join("\n"), boxenOptions);
+    console.log(msgBox);
+});
