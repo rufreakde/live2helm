@@ -18,10 +18,10 @@ export const boxenOptions: boxen.Options = {
     backgroundColor: "#1e1e1e",
 };
 
-export const argsPrint = function (parsedArguments) {
+export const argsPrint = function (parsedArguments: any) {
 
     const stringListbyLine: string[] = [];
-    stringListbyLine.push(chalk.white(`Command args: `));
+    stringListbyLine.push(chalk.white(`Filepath to template: `));
     stringListbyLine.push(chalk.green(`${parsedArguments["filepath"]}!\n`));
     stringListbyLine.push(chalk.white("Template Name: "));
     stringListbyLine.push(chalk.green(`${parsedArguments["templatename"]}!\n`));

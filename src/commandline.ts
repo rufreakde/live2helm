@@ -3,25 +3,34 @@ import boxen from "boxen";
 import { exec } from "child_process";
 import chalk from "chalk";
 
+const util = require("util");
+
 export class Commandline {
-    constructor(private boxenOptions: boxen.Options) { 
+    promisedExec: any;
+
+    constructor(private boxenOptions: boxen.Options) {
+        this.promisedExec = util.promisify(exec);
     }
 
-    public ls() {
-        return exec("ls -la", (error, stdout, stderr) => {
-            const consolePrints: string[] = [];
-        
-            if (error) {
-                consolePrints.push(chalk.red(`${error.message}!\n`));
-                return;
-            }
-            if (stderr) {
-                consolePrints.push(chalk.red(`${stderr}!\n`));
-                return;
-            }
+    public async cmdExists(cmd: string): Promise<string[]> {
+        const consolePrints: string[] = [];
+        const { stdout, stderr } = await this.promisedExec(`which ${cmd}`);
 
-            consolePrints.push(chalk.white(`${stdout}!\n`));
-            print(consolePrints);
-        });
+        if (stderr) {
+            consolePrints.push(chalk.red(`${stderr}- ❌`));
+        } else {
+            consolePrints.push(chalk.white(`${cmd} - ✔️`));
+        }
+        return consolePrints;
+    }
+
+    public async ls(): Promise<string[]> {
+        const consolePrints: string[] = [];
+        const { stdout, stderr } = await this.promisedExec(`ls -lah`);
+
+        if (stderr) {
+            consolePrints.push(chalk.red(`${stderr}!\n`));
+        }
+        return consolePrints;
     }
 }
