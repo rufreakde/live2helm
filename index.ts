@@ -2,54 +2,18 @@
 
 import chalk from "chalk";
 import boxen from "boxen";
-import * as yargs from "yargs";
 import { exec } from "child_process";
+import { args } from "./src/parser";
 
-// argument parser
-const borderStyle: boxen.CustomBorderStyle = {
-    topLeft: " ",
-    topRight: " ",
-    bottomLeft: " ",
-    bottomRight: " ",
-    horizontal: "-",
-    vertical: " ",
-}
 
-const boxenOptions: boxen.Options = {
-    padding: 1,
-    margin: 1,
-    borderStyle,
-    borderColor: "#007acc",
-    backgroundColor: "#1e1e1e",
-    
-};
-
-const args: any = yargs
-    .usage("Usage: -f <path-to-.tpl-file>")
-    .option(
-    "filepath", {
-        alias: "f",
-        describe:
-            "Filepath to .tpl file containing the tempalte you want to test on your live cluster.",
-        type: "string",
-        demandOption: true,
-    })
-    .option(
-    "templatename", {
-        alias: "n",
-        describe:
-            "The defined helm tempalte name usually something similar to <helmchart.name>.",
-        type: "string",
-        demandOption: true,
-    }).argv;
+const parsedArguments = args
+const consolePrints: string[] = [];
 
 // example print formatted
-const options: string[] = []
-options.push(chalk.white(`Command args: `));
-options.push(chalk.green(`${args["filepath"]}!\n`));
-options.push(chalk.white("Template Name: "))
-options.push(chalk.green(`${args["templatename"]}!\n`));
-
+consolePrints.push(chalk.white(`Command args: `));
+consolePrints.push(chalk.green(`${parsedArguments["filepath"]}!\n`));
+consolePrints.push(chalk.white("Template Name: "));
+consolePrints.push(chalk.green(`${parsedArguments["templatename"]}!\n`));
 
 // check environment function
 
@@ -59,20 +23,20 @@ options.push(chalk.green(`${args["templatename"]}!\n`));
 
 // remove all resources from the cluster where helm was depoyed to
 
-// TEST
+// TEST move to commandline
 exec("ls -la", (error, stdout, stderr) => {
     if (error) {
-        options.push(chalk.red(`${error.message}!\n`));
+        consolePrints.push(chalk.red(`${error.message}!\n`));
         return;
     }
     if (stderr) {
-        options.push(chalk.red(`${stderr}!\n`));
+        consolePrints.push(chalk.red(`${stderr}!\n`));
         return;
     }
 
-    options.push(chalk.white(`${stdout}!\n`));
+    consolePrints.push(chalk.white(`${stdout}!\n`));
 
     // console print
-    const msgBox = boxen(options.join("\n"), boxenOptions);
+    const msgBox = boxen(consolePrints.join("\n"), boxenOptions);
     console.log(msgBox);
 });
