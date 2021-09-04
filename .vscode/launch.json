@@ -5,7 +5,7 @@
             "name": "ts-node",
             "type": "node",
             "request": "launch",
-            "runtimeExecutable": "node",
+            "runtimeExecutable": "/home/rudolf/.nvm/versions/node/v14.15.5/bin/node",
             "runtimeArgs": [
                 "--nolazy",
                 "-r",

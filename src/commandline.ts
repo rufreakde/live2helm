@@ -12,25 +12,31 @@ export class Commandline {
         this.promisedExec = util.promisify(exec);
     }
 
-    public async cmdExists(cmd: string): Promise<string[]> {
+    public async executeAnyCMD(cmd: string, customErrorMessage: string = "", customSuccessMesage: string = ""): Promise<[string[], boolean]> {
         const consolePrints: string[] = [];
-        const { stdout, stderr } = await this.promisedExec(`which ${cmd}`);
+        let success = true;
 
-        if (stderr) {
-            consolePrints.push(chalk.red(`${stderr}- ❌`));
-        } else {
-            consolePrints.push(chalk.white(`${cmd} - ✔️`));
+        try {
+            await this.promisedExec(`${cmd}`);
+            if (customSuccessMesage !== "") {
+                consolePrints.push(chalk.red(`${customSuccessMesage}`));
+            }
+        } catch (err) {
+            if (customErrorMessage !== ""){
+                err = customErrorMessage;
+            }
+            consolePrints.push(chalk.red(`${err}`));
+            success = false;
         }
-        return consolePrints;
+
+        return [consolePrints, success];
     }
 
-    public async ls(): Promise<string[]> {
-        const consolePrints: string[] = [];
-        const { stdout, stderr } = await this.promisedExec(`ls -lah`);
+    public async cmdExists(cmd: string): Promise<[string[], boolean]> {
+        return this.executeAnyCMD(`which ${cmd}`, `${cmd} - ❌`, `${cmd} - ✔️`)
+    }
 
-        if (stderr) {
-            consolePrints.push(chalk.red(`${stderr}!\n`));
-        }
-        return consolePrints;
+    public async ls(): Promise<[string[], boolean]> {
+        return this.executeAnyCMD(`ls -lah`)
     }
 }

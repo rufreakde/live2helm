@@ -2,7 +2,7 @@
 import { ArgsParser } from "./src/parser";
 import { Commandline } from "./src/commandline"
 import { boxenOptions, argsPrint, print } from "./src/console";
-import { command } from "yargs";
+import { boolean, command } from "yargs";
 
 (async () => {
     const parser = new ArgsParser();
@@ -14,14 +14,15 @@ import { command } from "yargs";
 
     // check environment function
     // TODO SYNC commandline await?
-    const printBuffer: string[] = [];
+    const executionsBuffer: string[] = [];
     const commandline = new Commandline(boxenOptions);
     // execute the helm
-    printBuffer.push(...await commandline.cmdExists("kubectl"));
-    printBuffer.push(...await commandline.cmdExists("helm"));
-    printBuffer.push(...await commandline.ls());
+    executionsBuffer.push(...await commandline.cmdExists("kubectl"));
+    executionsBuffer.push(...await commandline.cmdExists("helm"));
+    executionsBuffer.push(...await commandline.ls());
 
-    print(printBuffer);
+    // filter away the success status for printing
+    print(executionsBuffer.filter((value, index) => typeof value !== 'boolean' ));
     // print the value the template retrieved
 
     // remove all resources from the cluster where helm was depoyed to
